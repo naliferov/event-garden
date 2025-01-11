@@ -2,6 +2,7 @@
   "name": "reploid",
   "version": "1.0.0",
   "description": "Simple REPL-like processing framework",
+  "type": "module",
   "main": "index.js",
   "license": "MIT",
   "keywords": ["example", "npm", "package"]

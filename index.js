@@ -1,52 +1,47 @@
-import fs from 'node:fs/promises'
+//import fs from 'node:fs/promises'
 
-export const reploidFactory = () => {
+export const eventGardenFactory = () => {
 
-    const reploid = {
+    const eventGarden = {
         events: [],
-        eventHandler: null,
-        inputInterval: null,
+        subscriber: null,
         
-        maxEventsPerSecond: 50,
-        isWorking: false,
+        //maxEventsPerSecond: 50,
         interruptor: null,
 
-        pause: () => {
+        hangProcess() {
+            setInterval(() => {}, 86400000)
+        },
+        pub(event) {
+            this.events.push(event)
+            this.removeInterruptor()
+        },
+        sub(subscriber) {
+            this.subscriber = subscriber
+        },
+        addInterruptor() {
             this.interruptor = Promise.withResolvers()
             return this.interruptor.promise
         },
-        play() {
-            this.interruptor.resolve('interruptor off')
+        removeInterruptor() {
+            this.interruptor.resolve()
             this.interruptor = null
         },
         async start() {
-            //generate this with promise and put to event
-
-            // setInterval(async () => {
-            //     let input
-            //     try {
-            //         const inputJson = await fs.readFile(this.inputPath, 'utf-8')
-            //         input = JSON.parse(configJson)
-            //     } catch (e) {
-            //         console.error('error in config proccing', e)
-            //     }
-            // }, 2000)
-
             while (true) {
-                for (let i = 0; i < events.length; i++) {
-                    console.log('event promise')
-                    this.eventHandler(await events[i])
+                const event = this.events.shift()
+                if (event) {
+                    console.log('call eventHandler and pass event', event)
                 }
-                events = []
-                events.push(this.pause())
+
+                if (this.events.length === 0) {
+                    console.log('addInterruptor')
+                    await this.addInterruptor()
+                    console.log('after interruptor')
+                }
             }
-        },
-        setInputPath() {
-        },
-        setEventHandler(eventHandler) {
-            this.eventHandler = eventHandler
         },
     }
 
-    return reploid
+    return eventGarden
 }
